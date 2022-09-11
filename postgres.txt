@@ -1,0 +1,7 @@
+sudo su - postgres
+psql
+create user root with password 'root';
+create database dbname;
+
+grant all privileges on database dbname to root;
+exit
