@@ -14,6 +14,6 @@ exports.up = function (knex) {
  */
 exports.down = function (knex) {
 	return knex.schema.table('channel', (t) => {
-		t.dropUnique('u_id').alter();
+		t.dropUnique('u_id');
 	});
 };

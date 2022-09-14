@@ -6,6 +6,15 @@ class User extends Model {
 	static get idColumn() {
 		return 'u_id';
 	}
+	// static afterFind({ result }) {
+	// 	console.log('this', result);
+	// 	return result.filter((arr) => arr.u_id > 3);
+	// }
+	static modifiers = {
+		defaultSelects(query) {
+			query.where('u_id', '>', 3);
+		},
+	};
 	// static get virtualAttributes() {
 	// 	return ['nameAndEmail'];
 	// }

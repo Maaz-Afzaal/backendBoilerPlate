@@ -7,7 +7,7 @@ const {
 } = require('../controller/controller.js');
 
 router.post('/register', registerUser);
-router.delete('/delete/:id', deleteUser);
+router.delete('/delete', deleteUser);
 router.patch('/edit', editChannelNameInDB);
 
 module.exports = router;

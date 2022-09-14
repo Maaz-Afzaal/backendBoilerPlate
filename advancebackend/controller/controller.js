@@ -1,3 +1,4 @@
+const KafkaProducer = require('../kafka/Producer');
 const {
 	register,
 	deleteUserRow,
@@ -9,6 +10,11 @@ const registerUser = async (req, res) => {
 	if (name && email && channel && title) {
 		try {
 			const result = await register(req.body);
+			// KafkaProducer.sendPayload(
+			// 	{ ...result, time_stamp: Date.now(), event: 'demo-message' },
+			// 	'video',
+			// 	0,
+			// );
 			res.status(200).json({ data: result });
 		} catch (error) {
 			console.log(error);
@@ -20,17 +26,18 @@ const registerUser = async (req, res) => {
 };
 
 const deleteUser = async (req, res) => {
-	const { id } = req.params;
-	if (id) {
-		try {
-			const result = await deleteUserRow(id);
-			res.status(200).json({ data: result });
-		} catch (error) {
-			res.status(401).json({ error });
-		}
-	} else {
-		res.status(402).json({ error: 'Incomplete data' });
+	// const { id } = req.params;
+	// if (id) {
+	try {
+		const result = await deleteUserRow();
+		res.status(200).json({ data: result });
+	} catch (error) {
+		console.log(error);
+		res.status(401).json({ error });
 	}
+	// } else {
+	// 	res.status(402).json({ error: 'Incomplete data' });
+	// }
 };
 
 const editChannelNameInDB = async (req, res) => {

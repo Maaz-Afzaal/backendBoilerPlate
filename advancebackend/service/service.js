@@ -3,24 +3,37 @@ const User = require('../database/models/users');
 
 const register = async (data) => {
 	const { name, email, channel, title } = data;
-	const transaction = await User.transaction(async (trx) => {
-		const user = await User.query(trx).insert({
-			name,
-			email,
-		});
-		const qu = await user.$relatedQuery('channel', trx).insert({
+	// const transaction = await User.transaction(async (trx) => {
+	// 	const user = await User.query(trx).insert({
+	// 		name,
+	// 		email,
+	// 	});
+	// 	const qu = await user.$relatedQuery('channel', trx).insert({
+	// 		name: channel,
+	// 	});
+	// 	const addVideo = await qu.$relatedQuery('video', trx).insert(
+	// 		title?.map((video) => {
+	// 			return {
+	// 				title: video,
+	// 			};
+	// 		}),
+	// 	);
+	// 	return addVideo;
+	// });
+	// return transaction;
+	const user = User.query().insertGraph({
+		name,
+		email,
+		channel: {
 			name: channel,
-		});
-		const addVideo = await qu.$relatedQuery('video', trx).insert(
-			title?.map((video) => {
+			video: title?.map((vid) => {
 				return {
-					title: video,
+					title: vid,
 				};
 			}),
-		);
-		return addVideo;
+		},
 	});
-	return transaction;
+	return user;
 };
 
 const editChannelName = async (data) => {
@@ -46,7 +59,12 @@ const editChannelName = async (data) => {
 };
 
 const deleteUserRow = async (id) => {
-	const del = await User.query().delete().where('u_id', '>', 3);
+	// const trx = await User.startTransaction();
+	const del = await User.query().where('u_id', '>', 3).delete();
+	// .delete()
+	// .where('u_id', '>', 3)
+	// .joinRelation('channel')
+	// .delete();
 	return del;
 };
 module.exports = {
